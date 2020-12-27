@@ -1,0 +1,11 @@
+---
+
+- name: setup backup on server
+  vars_files:
+    - ../r_ntp/defaults/main.yml
+
+  hosts: servers
+  remote_user: root
+
+  roles:
+    - { role: ../r_ntp }

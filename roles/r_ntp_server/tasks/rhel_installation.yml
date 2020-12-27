@@ -1,0 +1,16 @@
+---
+- name: Ensure chronyd is installed
+  package: 
+    name:  chrony
+    state: present
+
+- block:
+  - name: RHEL 8 chony config
+    template:
+      src: "templates/{{ item }}.j2"
+      dest: "/etc/{{ item }}"
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart chronyd
+  when: ansible_distribution_major_version == '8'

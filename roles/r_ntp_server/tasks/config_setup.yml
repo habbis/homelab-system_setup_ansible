@@ -1,0 +1,9 @@
+---
+- name: "setup {{ item }}"
+  template:
+    src: "templates/{{ item }}.j2"
+    dest: "/etc/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart rsyslog

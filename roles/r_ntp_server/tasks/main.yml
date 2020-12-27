@@ -1,0 +1,5 @@
+---
+- include: rhel_installation.yml
+  when: (ansible_distribution == "RedHat") or (ansible_distribution == "CentOS") or (ansible_distribution == "OracleLinux")
+#- include: config_setup.yml
+
