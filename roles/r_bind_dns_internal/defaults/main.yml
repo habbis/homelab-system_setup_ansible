@@ -1,0 +1,25 @@
+domain_name: test.domain.net
+
+bind_server_ipv4: 10.3.1.3
+
+
+name_server_ipv4: 10.3.1.3
+
+#name_server_domain: testdns
+
+hostname: testdns
+
+# a records 
+a_record_01: testipa
+a_record_01_ipv4: 10.3.1.3
+
+# /etc/named.conf 
+# acl network 
+test-network: 10.3.1.0/24
+
+#other_bind_server:
+#
+
+# ptr file
+ptr_test_network: 1.3.10.db
+

@@ -1,0 +1,11 @@
+---
+
+- name: setup dns server 
+  vars_files:
+    - roles/r_bind_dns_internal/defaults/main.yml
+
+  hosts: dns_server
+  remote_user: root
+
+  roles:
+    - { role: roles/r_bind_dns_internal }

@@ -1,0 +1,58 @@
+---
+
+- name: install_packages
+  package: 
+    name:
+      - bind 
+      - bind-utils
+    state: present
+
+- name: setup /etc/named.conf
+  template:
+    src: "templates/named.conf.j2"
+    dest: "/etc/named.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+
+- name: disable ipv6 bind
+  template:
+    src: "templates/named.j2"
+    dest: "/etc/sysconfig/named"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: setup zone 
+  template:
+    src: "templates/bind_zone.j2"
+    dest: "/var/named/{{ domain_name }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: zone ptr
+  template:
+    src: "templates/bind_zone_ptr.j2"
+    dest: "/var/named/{{ ptr_test_network }}"
+    owner: root
+    group: root
+    mode: 0644
+
+
+- name: allow firewall bind dns
+  command: firewall-cmd --add-service=dns --permanent
+
+- name: enable and start bind dns 
+  service:
+    name: named
+    state: started
+    enabled: yes
+
+#- nampa:wq
+  # TODO
+
+#- name: ipq_none_dns
+  # TODO
+

@@ -1,0 +1,13 @@
+$TTL 86400
+@   IN  SOA     {{ hostname }}.{{ domain_name }}. root.{{ domain_name }}. (
+        2019100301  ;Serial
+        3600        ;Refresh
+        1800        ;Retry
+        604800      ;Expire
+        86400       ;Minimum TTL
+)
+        ; define Name Server
+        IN  NS      {{ hostname }}.{{ domain_name }}.
+; define each hostname of an IP address
+30      IN  PTR     {{ hostname }}.{{ domain_name }}.
+31      IN  PTR     {{ a_record_01 }}.{{ domain_name }}.
