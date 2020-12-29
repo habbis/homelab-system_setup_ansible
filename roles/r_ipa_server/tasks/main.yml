@@ -1,0 +1,27 @@
+---
+- name: before_install
+  template:
+    src: "templates/hosts.j2"
+    dest: "/etc/hosts"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: enable freeipa
+  command: yum module enable -y idm:DL1
+
+- name: install freeipa
+  command: yum module install -y idm:DL1/dns
+
+- name: enable firewall freeipa
+  command: firewall-cmd --zone=public --add-service=freeipa-ldap --add-service=freeipa-ldaps --add-service=freeipa-replication  --permanent
+
+- name: enable more firewall freeipa
+  command: firewall-cmd --zone=public --add-service=ntp --add-service=  --add-service=http --add-service=https --permanent
+
+#- nampa:wq
+  # TODO
+
+#- name: ipq_none_dns
+  # TODO
+

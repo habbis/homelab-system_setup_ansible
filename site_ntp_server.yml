@@ -1,0 +1,11 @@
+---
+
+- name: setup ntp server
+  vars_files:
+    - /role/r_ntp/defaults/main.yml
+
+  hosts: servers
+  remote_user: root
+
+  roles:
+    - { role: role/r_ntp }

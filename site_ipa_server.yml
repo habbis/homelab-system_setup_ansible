@@ -1,0 +1,11 @@
+---
+
+- name: setup ntp server
+  vars_files:
+    - roles/r_ipa_server/defaults/main.yml
+
+  hosts: o8node04
+  remote_user: root
+
+  roles:
+    - { role: roles/r_ipa_server }
