@@ -1,5 +1,5 @@
 # add : set ACL entry for local network
-acl {{ test-network }} {
+acl {{ network_name01 }} {
         {{ test-network }};
 };
 
@@ -16,7 +16,7 @@ options {
         recursing-file  "/var/named/data/named.recursing";
         # add local network set on [acl] section above
         # network range you allow to recive queries from hosts
-        allow-query     { localhost; {{ test-network }}; };
+        allow-query     { localhost; {{ network_name01 }}; };
         # network range you allow to transfer zone files to clients
         # add secondary DNS servers if it exist
         allow-transfer  { localhost; };
