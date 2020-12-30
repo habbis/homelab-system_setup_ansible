@@ -57,12 +57,13 @@ ipadm_password=yourpass
 ```
 
 On the ipa server host and replcia server you need to setup hostname with domainname like this. 
-````
+```
 hostnamectl set-hostname yourserver.test.local
 ```
 
 Then add the same on /etc/hosts with ip adress
-```
+
+````
 yourip yourserver.test.local
 ```
 
