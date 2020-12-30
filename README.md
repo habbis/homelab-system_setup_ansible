@@ -66,6 +66,13 @@ Then add the same on /etc/hosts with ip adress
 yourip yourserver.test.local
 ```
 
+To use the premade freeipa ansible playbooks you will find them in the [ansible-freeipa](https://github.com/freeipa/ansible-freeipa) .
+
+```
+ansible-playbook -i hosts ansible-freeipa/playbooks/install-server.yml 
+ansible-playbook -i hosts ansible-freeipa/playbooks/install-replica.yml 
+```
+
 Then after setting up ipa server on your client and replica server set 
 dns server as your ipa server ipaddress. 
 
