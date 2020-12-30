@@ -14,7 +14,7 @@ Ansible role location
 
 This role setups what you need for installing freeipa.
 
-For this role you need [ansible-playbook](https://github.com/freeipa/ansible-freeipa)
+For this role you need [ansible-freeipa](https://github.com/freeipa/ansible-freeipa)
 the role have some premade ansible-playbooks and ansible task.
 
 Also install it via ansible-galaxy
