@@ -66,7 +66,7 @@ eula --agreed
 #services --enabled=NetworkManager,sshd
 services --enabled=sshd
 reboot
-user --name=user --groups=wheel --password=$1$C0mHcb0i$8jK4HZGpWSJlUgP8pkVwV/ --iscrypted
+user --name=user --groups=wheel --password={{ KICKSTART_HASHED_ROOT_PASSWORD }} --iscrypted
 
 # Initialize (format) all disks (optional)
 # zerombr
@@ -136,24 +136,6 @@ yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarc
 sed -i 'sPasswordAuthentication no|PasswordAuthentication yes|g' /etc/ssh/sshd_config
 systemctl reload sshd
 
-
-# for packer
-
-mkdir -p /root/.ssh
-touch /root/.ssh/authorized_keys
-chmod 700  /root/.ssh
-chmod 644 /root/.ssh/authorized_keys
-echo "sh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDS976qr25vZYwhUuHjyyIVBwTISF/wu5QmezuLIllMuclJDNvnyXxjdZyrP50yPk1lHWM23Lu7zYDdRmTVLf4i/OT4Jmg5dFFKJoZiLKEO4LWtZKxesPSeg4D18Z0SvGlve6benDK5YyDh3xVXlUC3QDUE95DVZ5/WfuvXT4HzmAMtvSEN6u/mJYPNj8IBxcxdUViGjJeAh7tP59Pmmpnxpmgao21OhTk7eB7sxO+h76ZQMDxDJhJ3hTo+h8tebAPjrRM7rQnXUra4op2IlGSoHHA9WcNFw4TMlNrSOU3R4v7hQkNlWPAmMDFStze9Pkdr7RQ2X/uCmD5r2TDSoKnZBhoOEIgZ540c4S9dCGrOcw3UgKDUllSzZqcAcnJCh6ReIgW5ZZpi5bhAJ4BdUEDLCa41cZ+cf/GNKSBUiFPEdXA7OwYOk+QBUugezf0qdavf/L9KVz3iPt3nszB0M5Hmo6Si4MTTeSmU3kXV9UGWGl/UESRs1gz/Ril2DdxqqRpPQLTmHTmTFN3mi5IRmNdIc6H7yD7h+RWAp758zaQHr79ZP0XUEbE/YY+rR/wcrAeZxDA+6T7UjcMDckHNA3AF/Agi7sWamkrVZHDnnPMvOXC1PW/+8+moPIHuSL2W2w+OMgbVaY6/usVxsyo1Ky6yz69J5IDmZ472TbyawbhEyw== dam@dam01" > /root/.ssh/authorized_keys
-
-mkdir -p /home/user/.ssh
-touch /home/user/.ssh/authorized_keys
-chmod 700  /home/user/.ssh
-chmod 644 /home/user/.ssh/authorized_keys
-echo "sh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDS976qr25vZYwhUuHjyyIVBwTISF/wu5QmezuLIllMuclJDNvnyXxjdZyrP50yPk1lHWM23Lu7zYDdRmTVLf4i/OT4Jmg5dFFKJoZiLKEO4LWtZKxesPSeg4D18Z0SvGlve6benDK5YyDh3xVXlUC3QDUE95DVZ5/WfuvXT4HzmAMtvSEN6u/mJYPNj8IBxcxdUViGjJeAh7tP59Pmmpnxpmgao21OhTk7eB7sxO+h76ZQMDxDJhJ3hTo+h8tebAPjrRM7rQnXUra4op2IlGSoHHA9WcNFw4TMlNrSOU3R4v7hQkNlWPAmMDFStze9Pkdr7RQ2X/uCmD5r2TDSoKnZBhoOEIgZ540c4S9dCGrOcw3UgKDUllSzZqcAcnJCh6ReIgW5ZZpi5bhAJ4BdUEDLCa41cZ+cf/GNKSBUiFPEdXA7OwYOk+QBUugezf0qdavf/L9KVz3iPt3nszB0M5Hmo6Si4MTTeSmU3kXV9UGWGl/UESRs1gz/Ril2DdxqqRpPQLTmHTmTFN3mi5IRmNdIc6H7yD7h+RWAp758zaQHr79ZP0XUEbE/YY+rR/wcrAeZxDA+6T7UjcMDckHNA3AF/Agi7sWamkrVZHDnnPMvOXC1PW/+8+moPIHuSL2W2w+OMgbVaY6/usVxsyo1Ky6yz69J5IDmZ472TbyawbhEyw== dam@dam01" > /home/user/.ssh/authorized_keys
-
-#wget --no-check-certificate https://10.15.2.2/pub/katello-ca-consumer-latest.noarch.rpm
-#yum localinstall katello-ca-consumer-latest.noarch.rpm
-#mkdir /etc/yum.repos.d/old ; mv /etc/yum.repos.d/CentOS-* /etc/yum.repos.d/old; mv /etc/yum.repos.d/epel* /etc/yum.repos.d/old
 
 
 yum clean all
