@@ -92,6 +92,7 @@ For
 - [r_rhel_apache](role/r_rhel_apache/)
 - [r_rhel_pxe](role/r_rhel_pxe/)
 - [r_rhel_dhcpd](role/r_rhel_dhcpd/)
+- [r_rhel_mysql](role/r_rhel_mysql/)
 
 
 
