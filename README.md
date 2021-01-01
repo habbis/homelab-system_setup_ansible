@@ -69,7 +69,7 @@ hostnamectl set-hostname yourserver.test.local
 
 Then add the same on /etc/hosts with ip adress
 
-````
+```
 yourip yourserver.test.local
 ```
 
