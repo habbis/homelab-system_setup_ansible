@@ -1,0 +1,11 @@
+---
+
+- name: patching of rhel based servers
+  vars_files:
+    - roles/r_rhel_patching/defaults/main.yml
+
+  hosts: pxe_server
+  remote_user: root
+
+  roles:
+    - { role: roles/r_rhel_patching }

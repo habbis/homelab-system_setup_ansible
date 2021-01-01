@@ -1,2 +1,20 @@
-[o8node04]
-10.1.1.24
+paserver]
+10.1.1.26 ansible_user=root
+
+[ipaserver:vars]
+ipaadmin_password=yourpass
+ipadm_password=yourpass
+ipaserver_domain=test.local
+ipaserver_realm=TEST.LOCAL
+ipaserver_setup_dns=yes
+ipaserver_auto_forwarders=yes
+
+[ipareplicas]
+10.1.1.25 ansible_user=root
+
+[ipareplicas:vars]
+ipareplica_domain=test.local
+ipaadmin_principal=admin
+ipaadmin_password=yourpass
+ipadm_password=yourpass
+

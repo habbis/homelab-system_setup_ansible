@@ -1,0 +1,142 @@
+---
+# tasks file for mariuszczyz.rhel-pxe
+
+- name: Install all required software
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - xinetd
+    - syslinux
+    - tftp-server
+    - httpd
+    - rsync
+
+- name: Enable and start XINETd service
+  service:
+    name: xinetd
+    state: started
+    enabled: True
+
+- name: Create iso images directory
+  file:
+    path: "{{ ISOS_PATH }}"
+    state: directory
+
+- name: Download installation iso images
+  get_url:
+    url: "{{ item.ISO_DOWNLOAD_URL }}"
+    dest: "{{ item.ISO_LOCATION }}"
+    mode: 0640
+  loop: "{{ ISOS }}"
+
+- name: Create mountpoint directories
+  file:
+    path: "/var/www/html/{{ item.NAME }}"
+    state: directory
+  loop: "{{ ISOS }}"
+  notify: restart httpd
+
+- name: Unmount existing ISOs
+  mount:
+    path: "{{ item.MOUNT_POINT }}"
+    src: "{{ item.ISO_LOCATION }}"
+    fstype: iso9660
+    opts: loop
+    state: unmounted
+  loop: "{{ ISOS }}"
+  notify: restart httpd
+
+- name: Mount ISOs read-only
+  mount:
+    path: "{{ item.MOUNT_POINT }}"
+    src: "{{ item.ISO_LOCATION }}"
+    fstype: iso9660
+    opts: loop
+    state: mounted
+  loop: "{{ ISOS }}"
+  notify: restart httpd
+
+- name: Copy custom Apache config template for each distro
+  template:
+    src: templates/httpd-pxe.conf.j2
+    dest: /etc/httpd/conf.d/httpd-pxe.conf
+    mode: 0640
+    owner: root
+    group: root
+  notify: restart httpd
+
+- name: Copy other Apache configuration files
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/httpd/conf.d/{{ item }}.conf"
+    mode: 0640
+    owner: root
+    group: root
+  notify: restart httpd
+  loop:
+    - autoindex.conf
+
+- name: Copy bootloader files
+  synchronize:
+    src: /usr/share/syslinux/
+    dest: /var/lib/tftpboot/
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Create TFTP directories
+  file:
+    path: /var/lib/tftpboot/{{ item.NAME }}
+    state: directory
+    mode: 0755
+  with_items:
+    - "{{ ISOS }}"
+
+- name: Copy bootable kernel images for all OSs
+  synchronize:
+    src: "{{ item.MOUNT_POINT }}/images/pxeboot/vmlinuz"
+    dest: "/var/lib/tftpboot/{{ item.NAME }}/vmlinuz"
+  delegate_to: "{{ inventory_hostname }}"
+  loop: "{{ ISOS }}"
+
+- name: Copy initrd images for all OSs
+  synchronize:
+    src: "/var/www/html/{{ item.NAME }}/images/pxeboot/initrd.img"
+    dest: "/var/lib/tftpboot/{{ item.NAME }}/initrd.img"
+  delegate_to: "{{ inventory_hostname }}"
+  loop: "{{ ISOS }}"
+
+- name: Create pxelinux.cfg directory
+  file:
+    path: /var/lib/tftpboot/pxelinux.cfg
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Copy default PXE config file
+  template:
+    src: default.j2
+    dest: /var/lib/tftpboot/pxelinux.cfg/default
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Make sure Kicsktart web root directory exists and create if not
+  file:
+    path: /var/www/html/kickstart
+    state: directory
+    mode: 0755
+    owner: apache
+    group: apache
+
+- name: Copy Kickstart files
+  template:
+    src: "{{ item }}.cfg.j2"
+    dest: "/var/www/html/kickstart/{{ item }}.cfg"
+    mode: 0644
+    owner: apache
+    group: apache
+  loop:
+    - rhel7-base
+    - rhel8-base
+    - fedora-base

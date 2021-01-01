@@ -1,0 +1,30 @@
+---
+galaxy_info:
+  author: Anthony Ruhier (Anthony25)
+  description: Install and configure Unbound
+  issue_tracker_url: https://github.com/Anthony25/ansible-role-unbound/issues
+  license: BSD
+  min_ansible_version: 2.5
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - jessie
+    - name: EL
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+    - name: Archlinux
+    - name: Alpine
+      versions:
+        - all
+
+  galaxy_tags:
+    - networking
+
+dependencies: []

@@ -1,0 +1,9 @@
+---
+
+r_squid_http_port: "8888"
+
+r_squid_disksize: 1024
+r_squid_vg: "vg0"
+
+r_squid_logrotate_interval: "daily"
+r_squid_logrotate_rotate: 30

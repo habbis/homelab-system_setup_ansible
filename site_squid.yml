@@ -1,0 +1,11 @@
+---
+
+- name: setup squid server
+  vars_files:
+    - roles/r_squid/defaults/main.yml
+
+  hosts: o8node04
+  remote_user: root
+
+  roles:
+    - { role: roles/r_squid }

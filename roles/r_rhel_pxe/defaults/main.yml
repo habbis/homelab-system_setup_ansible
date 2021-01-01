@@ -1,0 +1,46 @@
+---
+# defaults file for mariuszczyz.rhel-pxe
+
+# Refer to README.md for detailed explanation of each variable.
+
+# PXE ROLE SECTION
+# name: name of the operating system
+# iso_location: location on the PXE boot server where OS installation ISO images are stored
+# mount_point - this is where the installation ISO will be mounted,
+#               needed by Apache to serve packages during the unattenaded installation process.
+
+ISOS_PATH: /isos
+
+ISOS:
+- NAME: oracle_linux7
+  #ISO_DOWNLOAD_URL: https://yum.oracle.com/ISOS/OracleLinux/OL7/u9/x86_64/OracleLinux-R7-U9-Server-x86_64-dvd.iso
+  ISO_DOWNLOAD_URL: https://yum.oracle.com/ISOS/OracleLinux/OL7/u9/x86_64/x86_64-boot.iso
+  ISO_LOCATION: /isos/CentOS-7-x86_64-Everything-1908.iso
+  MOUNT_POINT: /var/www/html/oracle_linux7
+- NAME: oracle_linux8
+  ISO_DOWNLOAD_URL: https://yum.oracle.com/ISOS/OracleLinux/OL8/u3/x86_64/x86_64-boot.iso
+  ISO_LOCATION: /isos/OracleLinux-R8-U3-x86_64-dvd.iso
+  MOUNT_POINT: /var/www/html/oracle_linux8
+- NAME: fedora31
+  ISO_DOWNLOAD_URL: https://download.fedoraproject.org/pub/fedora/linux/releases/33/Server/x86_64/iso/Fedora-Server-dvd-x86_64-33-1.2.iso
+  ISO_LOCATION: /isos/Fedora-Server-dvd-x86_64-33-1.2.iso
+  MOUNT_POINT: /var/www/html/fedora31
+
+KICKSTART_HASHED_ROOT_PASSWORD: minecraft.1520
+NON_ROOT_USER_NAME: minecraft.1520
+NON_ROOT_USER_PASSWORD: minecraft.1520
+TIMEZONE: Europe/Oslo
+NTP_SERVERS: 2.pfsense.pool.ntp.org
+
+FEDORA_HOSTNAME: fedora.home.local
+FEDORA_NETWORK_INSTALLATION_URL: http://{{ ansible_default_ipv4.address }}/fedora31
+
+CENTOS7_HOSTNAME: rhel7.home.local
+CENTOS7_NETWORK_INSTALLATION_URL: http://{{ ansible_default_ipv4.address }}/rhel7
+
+# CentOS 8 configured to use a public repo for now
+CENTOS8_HOSTNAME: rhel8.home.local
+#CENTOS8_BASE_OS_URL: http://mirror.steadfastnet.com/rhel/8/BaseOS/x86_64/os/
+#CENTOS8_APPSTREAM_REPO_URL: http://mirror.steadfastnet.com/rhel/9/AppStream/x86_64/kickstart/
+#CENTOS8_BASE_OS_URL: http://mirror.steadfastnet.com/rhel/8/BaseOS/x86_64/os/
+#CENTOS8_APPSTREAM_REPO_URL: http://mirror.steadfastnet.com/rhel/9/AppStream/x86_64/kickstart/

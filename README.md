@@ -31,6 +31,12 @@ libary        = /home/youruser/.ansible/collections/ansible_collections/freeipa/
 module_utils  = /home/youruser/.ansible/collections/ansible_collections/freeipa/ansible_freeipa/plugins/module_utils
 ```
 
+Or use the new default for ansible 
+
+```
+collections_paths=/home/user/collections
+```
+
 host file need to look like this if you want to user it with dns and a replica host.
 
 ```
@@ -76,5 +82,35 @@ ansible-playbook -i hosts ansible-freeipa/playbooks/install-replica.yml
 
 Then after setting up ipa server on your client and replica server set 
 dns server as your ipa server ipaddress. 
+
+# Thanks to 
+
+[mariuszczyz](https://github.com/mariuszczyz)
+
+For 
+
+- [r_rhel_apache](role/r_rhel_apache/)
+- [r_rhel_pxe](role/r_rhel_pxe/)
+- [r_rhel_dhcpd](role/r_rhel_dhcpd/)
+
+
+
+[ataha](https://github.com/ataha)
+
+For
+
+- [r_rhel_patching](role/r_rhel_patching/)
+
+
+
+[aruhier](https://github.com/aruhier/ansible-role-unbound)
+
+For
+
+- [r_unbound](role/r_unbound/)
+
+
+
+
 
 

@@ -1,0 +1,31 @@
+---
+# tasks file for mariuszczyz.rhel-dhcpd
+
+- name: Install DHCP server package rhel7
+  package:
+    name: dhcp
+    state: present
+  when: ansible_distribution_major_version == '7'
+
+
+- name: Install DHCP server package rhel8
+  package:
+    name: dhcp-server
+    state: present
+  when: ansible_distribution_major_version == '8'
+
+
+- name: Copy custom DHCP configuration template
+  template:
+    src: dhcpd.conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+    backup: yes
+    mode: 0640
+    owner: root
+    group: root
+  notify: restart dhcpd
+
+- name: Enable DHCP server
+  service:
+    name: dhcpd
+    enabled: yes

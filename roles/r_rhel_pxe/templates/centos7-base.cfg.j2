@@ -1,0 +1,160 @@
+# Install a fresh new system (optional)
+install
+
+# Specify installation method to use for installation
+# To use a different one comment out the 'url' one below, update
+# the selected choice with proper options & un-comment it
+cdrom
+#
+# Set language to use during installation and the default language to use on the installed system (required)
+lang en_US.UTF-8
+
+# Set system keyboard type / layout (required)
+keyboard us
+
+# Configure network information for target system and activate network devices in the installer environment (optional)
+# --onboot	enable device at a boot time
+# --device	device to be activated and / or configured with the network command
+# --bootproto	method to obtain networking configuration for device (default dhcp)
+# --noipv6	disable IPv6 on this device
+#
+# NOTE: Usage of DHCP will fail CCE-27021-5 (DISA FSO RHEL-06-000292). To use static IP configuration,
+#       "--bootproto=static" must be used. For example:
+# network --bootproto=static --ip=10.0.2.15 --netmask=255.255.255.0 --gateway=10.0.2.254 --nameserver 192.168.2.1,192.168.3.1
+#
+#network --onboot yes --device ens192 --bootproto dhcp --noipv6 --hostname c7
+#network --onboot yes --device ens160 --bootproto dhcp --noipv6 --hostname c7
+#unsupported_hardware
+network --bootproto=dhcp --nameserver=10.17.2.2,172.16.2.3
+#rootpw --iscrypted $1$zbx.o4Iz$/EGKC7yrEfwSFxBdT/lmx0 
+
+#rootpw --iscrypted $6$rhel6usgcb$aS6oPGXcPKp3OtFArSrhRwu6sN8q2.yEGY7AIwDOQd23YCtiz9c5mXbid1BzX9bmXTEZi.hCzTEXFosVBI5ng0
+
+
+# Configure firewall settings for the system (optional)
+# --enabled	reject incoming connections that are not in response to outbound requests
+# --ssh		allow sshd service through the firewall
+# firewall --enabled --ssh
+firewall --disabled
+
+# Set up the authentication options for the system (required)
+# --enableshadow	enable shadowed passwords by default
+# --passalgo		hash / crypt algorithm for new passwords
+# See the manual page for authconfig for a complete list of possible options.
+#authconfig --enableshadow --passalgo=sha512
+
+# State of SELinux on the installed system (optional)
+# Defaults to enforcing
+selinux --permissive
+
+# Set the system time zone (required)
+timezone --utc Europe/Oslo
+
+# Specify how the bootloader should be installed (required)
+# Plaintext password is: password
+# Refer to e.g. http://fedoraproject.org/wiki/Anaconda/Kickstart#rootpw to see how to create
+# encrypted password form for different plaintext password
+bootloader --location=mbr --append="crashkernel=auto rhgb quiet"
+text
+skipx
+zerombr
+clearpart --all --initlabel
+#autopart
+auth --enableshadow --passalgo=sha512 --kickstart
+firstboot --disabled
+eula --agreed
+#services --enabled=NetworkManager,sshd
+services --enabled=sshd
+reboot
+user --name=user --groups=wheel --password=$1$C0mHcb0i$8jK4HZGpWSJlUgP8pkVwV/ --iscrypted
+
+# Initialize (format) all disks (optional)
+# zerombr
+
+# The following partition layout scheme assumes disk of size 20GB or larger
+# Modify size of partitions appropriately to reflect actual machine's hardware
+# 
+# Remove Linux partitions from the system prior to creating new ones (optional)
+# --linux	erase all Linux partitions
+# --initlabel	initialize the disk label to the default based on the underlying architecture
+clearpart --linux --initlabel
+
+# Create primary system partitions (required for installs)
+part /boot --fstype=xfs --size=512
+part pv.01 --grow --size=1
+
+# Create a Logical Volume Management (LVM) group (optional)
+volgroup vg0 --pesize=4096 pv.01
+# Create particular logical volumes (optional)
+logvol / --fstype=xfs --name=root --vgname=vg0 --size=5100 --grow
+# CCE-26557-9: Ensure /home Located On Separate Partition
+logvol /home --fstype=xfs --name=home --vgname=vg0 --size=1024 --fsoptions="nodev"
+# CCE-26435-8: Ensure /tmp Located On Separate Partition
+#logvol /tmp --fstype=xfs --name=tmp --vgname=vg0 --size=1024 --fsoptions="nodev,noexec,nosuid"
+# CCE-26639-5: Ensure /var Located On Separate Partition
+logvol /var --fstype=xfs --name=var --vgname=vg0 --size=4100 --fsoptions="nodev"
+# CCE-26215-4: Ensure /var/log Located On Separate Partition
+logvol /var/log --fstype=xfs --name=var-log --vgname=vg0 --size=5100 --fsoptions="nodev"
+# CCE-26215-4: Ensure /opt Located On Separate Partition
+logvol /opt --fstype=xfs --name=opt --vgname=vg0 --size=2100 --fsoptions="nodev"
+# CCE-26436-6: Ensure /var/log/audit Located On Separate Partition
+#logvol /var/log/audit --fstype=xfs --name=LogVol05 --vgname=vg0 --size=512 --fsoptions="nodev"
+logvol swap --name=lv_swap --vgname=vg0 --size=2016
+
+
+%packages --ignoremissing --excludedocs
+@Base
+@Core
+@Development Tools
+openssh-clients
+sudo
+openssl-devel
+readline-devel
+zlib-devel
+kernel-headers
+kernel-devel
+net-tools
+vim
+wget
+curl
+rsync
+
+%end
+
+%post --log=/var/log/ks.post02.log
+#!/bin/bash
+
+set -x
+#yum update -y
+
+# Enable epel repo
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm 
+
+
+# for packer 
+
+sed -i 'sPasswordAuthentication no|PasswordAuthentication yes|g' /etc/ssh/sshd_config
+systemctl reload sshd
+
+
+# for packer
+
+mkdir -p /root/.ssh
+touch /root/.ssh/authorized_keys
+chmod 700  /root/.ssh
+chmod 644 /root/.ssh/authorized_keys
+echo "sh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDS976qr25vZYwhUuHjyyIVBwTISF/wu5QmezuLIllMuclJDNvnyXxjdZyrP50yPk1lHWM23Lu7zYDdRmTVLf4i/OT4Jmg5dFFKJoZiLKEO4LWtZKxesPSeg4D18Z0SvGlve6benDK5YyDh3xVXlUC3QDUE95DVZ5/WfuvXT4HzmAMtvSEN6u/mJYPNj8IBxcxdUViGjJeAh7tP59Pmmpnxpmgao21OhTk7eB7sxO+h76ZQMDxDJhJ3hTo+h8tebAPjrRM7rQnXUra4op2IlGSoHHA9WcNFw4TMlNrSOU3R4v7hQkNlWPAmMDFStze9Pkdr7RQ2X/uCmD5r2TDSoKnZBhoOEIgZ540c4S9dCGrOcw3UgKDUllSzZqcAcnJCh6ReIgW5ZZpi5bhAJ4BdUEDLCa41cZ+cf/GNKSBUiFPEdXA7OwYOk+QBUugezf0qdavf/L9KVz3iPt3nszB0M5Hmo6Si4MTTeSmU3kXV9UGWGl/UESRs1gz/Ril2DdxqqRpPQLTmHTmTFN3mi5IRmNdIc6H7yD7h+RWAp758zaQHr79ZP0XUEbE/YY+rR/wcrAeZxDA+6T7UjcMDckHNA3AF/Agi7sWamkrVZHDnnPMvOXC1PW/+8+moPIHuSL2W2w+OMgbVaY6/usVxsyo1Ky6yz69J5IDmZ472TbyawbhEyw== dam@dam01" > /root/.ssh/authorized_keys
+
+mkdir -p /home/user/.ssh
+touch /home/user/.ssh/authorized_keys
+chmod 700  /home/user/.ssh
+chmod 644 /home/user/.ssh/authorized_keys
+echo "sh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDS976qr25vZYwhUuHjyyIVBwTISF/wu5QmezuLIllMuclJDNvnyXxjdZyrP50yPk1lHWM23Lu7zYDdRmTVLf4i/OT4Jmg5dFFKJoZiLKEO4LWtZKxesPSeg4D18Z0SvGlve6benDK5YyDh3xVXlUC3QDUE95DVZ5/WfuvXT4HzmAMtvSEN6u/mJYPNj8IBxcxdUViGjJeAh7tP59Pmmpnxpmgao21OhTk7eB7sxO+h76ZQMDxDJhJ3hTo+h8tebAPjrRM7rQnXUra4op2IlGSoHHA9WcNFw4TMlNrSOU3R4v7hQkNlWPAmMDFStze9Pkdr7RQ2X/uCmD5r2TDSoKnZBhoOEIgZ540c4S9dCGrOcw3UgKDUllSzZqcAcnJCh6ReIgW5ZZpi5bhAJ4BdUEDLCa41cZ+cf/GNKSBUiFPEdXA7OwYOk+QBUugezf0qdavf/L9KVz3iPt3nszB0M5Hmo6Si4MTTeSmU3kXV9UGWGl/UESRs1gz/Ril2DdxqqRpPQLTmHTmTFN3mi5IRmNdIc6H7yD7h+RWAp758zaQHr79ZP0XUEbE/YY+rR/wcrAeZxDA+6T7UjcMDckHNA3AF/Agi7sWamkrVZHDnnPMvOXC1PW/+8+moPIHuSL2W2w+OMgbVaY6/usVxsyo1Ky6yz69J5IDmZ472TbyawbhEyw== dam@dam01" > /home/user/.ssh/authorized_keys
+
+#wget --no-check-certificate https://10.15.2.2/pub/katello-ca-consumer-latest.noarch.rpm
+#yum localinstall katello-ca-consumer-latest.noarch.rpm
+#mkdir /etc/yum.repos.d/old ; mv /etc/yum.repos.d/CentOS-* /etc/yum.repos.d/old; mv /etc/yum.repos.d/epel* /etc/yum.repos.d/old
+
+
+yum clean all
+%end

@@ -1,0 +1,29 @@
+---
+# defaults file for mariuszczyz.rhel-dhcpd
+
+# local domain name for dhcp clients
+DOMAIN_NAME: no.habbfarm.net
+
+# internal or public DNS servers, blank space seperated
+DOMAIN_DNS_SERVERS: 10.17.2.3
+
+# DHCP lease time expiration in seconds
+DEFAULT_LEASE_TIME: 600
+
+# max DHCP lease time expiration in seconds
+MAX_LEASE_TIME: 7200
+
+# subnet IP address of the local network
+SUBNET_IP_ADDRESS: 10.16.1.0
+
+# netmask IP address of the local network
+NETMASK_IP_ADDRESS: 255.255.255.0
+
+# range of IP address to serve to clients
+DHCP_DYNAMIC_IP_RANGE: 10.16.1.50 10.16.1.100
+
+# local network gateway IP address
+GATEWAY_IP_ADDRESS: 10.16.1.1
+
+# local network broadcast IP address
+BROADCAST_IP_ADDRESS: 10.16.1.255

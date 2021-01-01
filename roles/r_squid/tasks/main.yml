@@ -1,0 +1,106 @@
+---
+
+- name: install rpm for squid
+  package:
+    name: squid
+    state: present
+
+- name: make a mount point for cache
+  file:
+    path: /var/spool/squid
+    mode: 0750
+    owner: squid
+    group: squid
+    state: directory
+
+- name: create a logical volume for cache
+  lvol:
+    vg: "{{ r_squid_vg }}"
+    lv: VarSpoolSquid
+    size: "{{ r_squid_disksize }}"
+
+- name: create the cache file system
+  filesystem:
+    fstype: xfs
+    dev: "/dev/{{ r_squid_vg }}/VarSpoolSquid"
+
+- name: mount the cache file system
+  mount:
+    path: /var/spool/squid
+    src: "/dev/mapper/{{ r_squid_vg }}-VarSpoolSquid"
+    fstype: xfs
+    state: mounted
+
+- name: give ownership of cache to squid
+  file:
+    path: /var/spool/squid
+    mode: 0750
+    owner: squid
+    group: squid
+    state: directory
+
+- name: set up the standard config file
+  template:
+    src: templates/squid.conf.j2
+    dest: /etc/squid/squid.conf
+    owner: root
+    group: squid
+    mode: 0640
+  notify: restart squid
+
+- name: create the conf.d subdirectory
+  file:
+    path: /etc/squid/conf.d
+    mode: 0750
+    owner: root
+    group: squid
+    state: directory
+
+- name: put a README.conf in conf.d
+  template:
+    src: templates/README.conf.j2
+    dest: /etc/squid/conf.d/README.conf
+    owner: root
+    group: squid
+    mode: 0640
+
+- name: set up logrotate processing
+  template:
+    src: templates/logrotate.j2
+    dest: /etc/logrotate.d/squid
+    owner: root
+    group: root
+    mode: 0644
+
+- name: configure the squid service
+  service:
+    name: squid
+    state: started
+    enabled: yes
+
+- name: get service facts for telegraf check
+  service_facts:
+
+- name: set up telegraf monitoring if telegraf is active
+  block:
+
+  - name: create our dedicated config directory for telegraf
+    file:
+      path: /etc/telegraf/telegraf.d/squid
+      mode: 0755
+      owner: root
+      group: root
+      state: directory
+
+  - name: set up telegraf monitoring
+    template:
+      src: templates/inputs_squid_net_response.conf.j2
+      dest: /etc/telegraf/telegraf.d/squid/inputs_squid_net_response.conf
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart telegraf
+
+  when: services['telegraf.service'] is defined and services['telegraf.service']['status'] == 'enabled'
+
+# eof
