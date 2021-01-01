@@ -93,6 +93,7 @@ For
 - [r_rhel_pxe](role/r_rhel_pxe/)
 - [r_rhel_dhcpd](role/r_rhel_dhcpd/)
 - [r_rhel_mysql](role/r_rhel_mysql/)
+- [r_rhel_sshd_hardening](role/r_rhel_sshd_hardening/)
 
 
 
