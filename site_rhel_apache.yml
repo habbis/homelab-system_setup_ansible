@@ -1,0 +1,11 @@
+---
+
+- name: setup apache server
+  vars_files:
+    - roles/r_rhel_apache/defaults/main.yml
+
+  hosts: pxe_server
+  remote_user: root
+
+  roles:
+    - { role: roles/r_rhel_apache }
