@@ -15,7 +15,7 @@ ISOS:
 - NAME: oracle_linux7
   ISO_DOWNLOAD_URL: https://yum.oracle.com/ISOS/OracleLinux/OL7/u9/x86_64/OracleLinux-R7-U9-Server-x86_64-dvd.iso
   #ISO_DOWNLOAD_URL: https://yum.oracle.com/ISOS/OracleLinux/OL7/u9/x86_64/x86_64-boot.iso
-  ISO_LOCATION: /isos/CentOS-7-x86_64-Everything-1908.iso
+  ISO_LOCATION: /isos/OracleLinux-R7-U9-Server-x86_64-dvd.iso
   MOUNT_POINT: /var/www/html/oracle_linux7
 - NAME: oracle_linux8
   #ISO_DOWNLOAD_URL: https://yum.oracle.com/ISOS/OracleLinux/OL8/u3/x86_64/x86_64-boot.iso
@@ -28,8 +28,8 @@ ISOS:
   ISO_LOCATION: /isos/Fedora-Server-dvd-x86_64-33-1.2.iso
   MOUNT_POINT: /var/www/html/fedora31
 
-KICKSTART_HASHED_ROOT_PASSWORD: 
-NON_ROOT_USER_NAME: 
+KICKSTART_HASHED_ROOT_PASSWORD:
+NON_ROOT_USER_NAME:  
 NON_ROOT_USER_PASSWORD: 
 TIMEZONE: Europe/Oslo
 NTP_SERVERS: 2.pfsense.pool.ntp.org

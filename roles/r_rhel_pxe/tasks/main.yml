@@ -137,6 +137,12 @@
     owner: apache
     group: apache
   loop:
-    - rhel7-base
-    - rhel8-base
+    - centos7-base
+    - centos8-base
     - fedora-base
+
+- name: enable tftp
+  service:
+    name: tftp
+    state: started
+    enabled: yes

@@ -15,31 +15,31 @@ localboot 0
 menu default
 
 label 2
-menu label ^2) Install Fedora 31 Manually with graphical GUI
+menu label ^2) Install Fedora 32 Manually with graphical GUI
 kernel fedora31/vmlinuz
 append initrd=fedora31/initrd.img method=http://{{ ansible_default_ipv4.address }}/fedora31 devfs=nomount
 
 label 3
 menu label ^3) Install CentOS 7 Manually with graphical GUI
-kernel rhel7/vmlinuz
-append initrd=rhel7/initrd.img method=http://{{ ansible_default_ipv4.address }}/rhel7 devfs=nomount
+kernel oracle_linux7/vmlinuz
+append initrd=oracle_linux7/initrd.img method=http://{{ ansible_default_ipv4.address }}/oracle_linux7 devfs=nomount
 
 label 4
 menu label ^4) Install CentOS 8 Manually with graphical GUI
-kernel rhel8/vmlinuz
-append initrd=rhel8/initrd.img method=http://{{ ansible_default_ipv4.address }}/rhel8 devfs=nomount
+kernel oracle_linux8/vmlinuz
+append initrd=oracle_linux8/initrd.img method=http://{{ ansible_default_ipv4.address }}/oracle_linux8 devfs=nomount
 
 label 5
-menu label ^5) Base Unattended Fedora 31 Kickstart Install in Text Mode
+menu label ^5) Base Unattended Fedora 32 Kickstart Install in Text Mode
 kernel fedora31/vmlinuz
 append vga=normal initrd=fedora31/initrd.img ks=http://{{ ansible_default_ipv4.address }}/kickstart/fedora-base.cfg ksdevice=bootif
 
 label 5
 menu label ^5) Base Unattended CentOS 7 Kickstart Install in Text Mode
-kernel rhel7/vmlinuz
-append vga=normal initrd=rhel7/initrd.img ks=http://{{ ansible_default_ipv4.address }}/kickstart/rhel7-base.cfg ksdevice=bootif
+kernel oracle_linux7/vmlinuz
+append vga=normal initrd=oracle_linux7/initrd.img ks=http://{{ ansible_default_ipv4.address }}/kickstart/centos7-base.cfg ksdevice=bootif
 
 label 6
 menu label ^6) Base Unattended CentOS 8 Kickstart Install in Text Mode
-kernel rhel8/vmlinuz
-append vga=normal initrd=rhel8/initrd.img ks=http://{{ ansible_default_ipv4.address }}/kickstart/rhel8-base.cfg ksdevice=bootif
+kernel oracle_linux8/vmlinuz
+append vga=normal initrd=oracle_linux8/initrd.img ks=http://{{ ansible_default_ipv4.address }}/kickstart/centos8-base.cfg ksdevice=bootif
