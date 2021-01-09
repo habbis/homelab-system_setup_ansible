@@ -3,6 +3,6 @@
 supported_distros:
   - RedHat
   - CentOS
-
+  - OracleLinux
 
 ip_address: "{{ ansible_default_ipv4.address }}"
