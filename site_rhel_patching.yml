@@ -4,7 +4,7 @@
   vars_files:
     - roles/r_rhel_patching/defaults/main.yml
 
-  hosts: pxe_server
+  hosts: localhost
   remote_user: root
 
   roles:
