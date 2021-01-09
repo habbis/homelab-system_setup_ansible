@@ -101,7 +101,7 @@ For
 
 For
 
-- [r_rhel_patching](role/r_rhel_patching/)
+- [r_rhel_patching](roles/r_rhel_patching/)
 
 
 
@@ -109,7 +109,7 @@ For
 
 For
 
-- [r_unbound](role/r_unbound/)
+- [r_unbound](roles/r_unbound/)
 
 
 
